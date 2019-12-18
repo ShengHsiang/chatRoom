@@ -1,4 +1,4 @@
-# full-base-vue
+# chat-room
 
 ## Project setup
 ```
