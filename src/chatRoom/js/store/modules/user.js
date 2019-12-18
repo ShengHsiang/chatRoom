@@ -116,17 +116,20 @@ const actions = {
     }
   },
   setUnreadMessage({ commit, state }, id) {
-    if (state.userList.length === 0) {
-      return
-    }
-    state.userList.forEach((item, index) => {
-      if (state.chatter.hasOwnProperty("userId") && item.userId === state.chatter.userId) {
+    return new Promise((resolve, reject) => {
+      if (state.userList.length === 0) {
         return
       }
-      if (item.userId === id) {
-        const newobj = Object.assign({}, item, { unread: true })
-        Vue.set(state.userList, index, newobj)
-      }
+      state.userList.forEach((item, index) => {
+        if (state.chatter.hasOwnProperty("userId") && item.userId === state.chatter.userId) {
+          return
+        }
+        if (item.userId === id) {
+          const newobj = Object.assign({}, item, { unread: true })
+          Vue.set(state.userList, index, newobj)
+          resolve(newobj)
+        }
+      })
     })
   }
 };

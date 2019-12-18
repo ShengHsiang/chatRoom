@@ -117,14 +117,28 @@ export default {
             break;
           case 4:
             this.$store.dispatch("user/requestUserMessage", data);
-            this.$store.dispatch("user/setUnreadMessage", data.srcUserId);
+            this.$store
+              .dispatch("user/setUnreadMessage", data.srcUserId)
+              .then(res => {
+                this.$notify({
+                  title: res.nickName,
+                  message: data.msg
+                });
+              });
             break;
           case 8:
             this.$store.dispatch("user/addGroup", data);
             break;
           case 16:
             this.$store.dispatch("user/requestGroupMessage", data);
-            this.$store.dispatch("user/setUnreadMessage", data.groupId);
+            this.$store
+              .dispatch("user/setUnreadMessage", data.groupId)
+              .then(res => {
+                this.$notify({
+                  title: res.nickName,
+                  message: data.msg
+                });
+              });
             break;
           case 20:
             this.$store.commit("user/setUserList", data.userSessions);

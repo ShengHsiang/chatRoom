@@ -25,8 +25,11 @@
     <div class="chat-room-message_wrap">
       <div class="message-header_wrap">
         <div class="message-header_text">{{chatter.nickName}}</div>
+        <div class="message-header_setting" v-if="chatter.isGroup">
+          <el-icon class="el-icon-setting"></el-icon>
+        </div>
       </div>
-      <div class="message-content_wrap">
+      <div class="message-content_wrap" ref="content">
         <template v-for="(item, index) in userMessage">
           <div class="message-content" :class="{'isMe': item.isMe}" :key="index">
             <div class="message-box">
@@ -75,6 +78,16 @@ export default {
       chatter: "getChatter",
       userMessage: "getUserMessage"
     })
+  },
+  watch: {
+    userMessage: {
+      immediate: true,
+      handler: function(newVal, oldVal) {
+        this.$nextTick(() => {
+          this.$refs.content.scrollTop = this.$refs.content.scrollHeight;
+        });
+      }
+    }
   },
   created() {
     this.getOnlineUserList();
@@ -253,10 +266,19 @@ export default {
     height: 60px;
     background-color: #f9f9f9;
     border-bottom: 1px solid $--border-color-base;
-    padding: 20px;
+    padding: 0 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
   .message-header_text {
-
+  }
+  .message-header_setting {
+    font-size: 18px;
+    cursor: pointer;
+    &:hover {
+      color: lighten($color: #000000, $amount: 40%);
+    }
   }
   .message-content_wrap {
     height: calc(700px - 60px - 150px);
@@ -326,7 +348,7 @@ export default {
       position: relative;
       word-wrap: break-word;
       word-break: break-all;
-      overflow: hidden;
+      /* overflow: hidden; */
       &::after {
         position: absolute;
         content: "";
